@@ -12,7 +12,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.dicoding.asclepius.R
 import com.dicoding.asclepius.databinding.ActivityMainBinding
 import com.dicoding.asclepius.helper.ImageClassifierHelper
+import com.yalantis.ucrop.UCrop
 import org.tensorflow.lite.task.vision.classifier.Classifications
+import java.io.File
 import java.util.Locale
 
 class MainActivity : AppCompatActivity(), ImageClassifierHelper.ClassifierListener  {
@@ -52,19 +54,54 @@ class MainActivity : AppCompatActivity(), ImageClassifierHelper.ClassifierListen
         uri: Uri? ->
         if (uri != null) {
             currentImageUri = uri
-            showImage()
+            imageCropLaunch(uri)
         } else {
             showToast(getString(R.string.media_not_found))
         }
     }
 
+    private fun imageCropLaunch(uri: Uri) {
+        val destinationUri = Uri.fromFile(File(cacheDir, "croppedImage.jpg"))
+        val options = UCrop.Options().apply {
+            setCompressionQuality(100)
+        }
 
-    private fun showImage() {
-        // TODO: Menampilkan gambar sesuai Gallery yang dipilih.
-        currentImageUri?.let {
-            mainBinding.previewImageView.setImageURI(it)
+        UCrop.of(uri, destinationUri)
+            .withAspectRatio(1f, 1f)
+            .withMaxResultSize(1080, 1080)
+            .withOptions(options)
+            .start(this)
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
+            if (requestCode == UCrop.REQUEST_CROP) {
+                val resultUri = UCrop.getOutput(data!!)
+                resultUri?.let {
+                    currentImageUri = resultUri
+                    showImage()
+                }
+            }
+        } else if (resultCode == UCrop.RESULT_ERROR) {
+            val cropError = UCrop.getError(data!!)
+            cropError?.printStackTrace()
+            showToast(getString(R.string.crop_failed))
         }
     }
+
+
+    private fun showImage() {
+        currentImageUri?.let { uri ->
+            // Membuat URI baru dengan menambahkan query parameter unik
+            val newUri = Uri.parse("$uri?${System.currentTimeMillis()}")
+            mainBinding.previewImageView.setImageURI(newUri)
+        } ?: run {
+            showToast(getString(R.string.image_not_found)) // Jika URI tidak ada
+        }
+    }
+
 
     private fun analyzeImage() {
         // TODO: Menganalisa gambar yang berhasil ditampilkan.
@@ -111,13 +148,7 @@ class MainActivity : AppCompatActivity(), ImageClassifierHelper.ClassifierListen
             result?.let { classifications ->
                 if (classifications.isNotEmpty() && classifications[0].categories.isNotEmpty()) {
                     val analize = classifications[0].categories[0]
-
-                        if (analize.label.lowercase(Locale.getDefault())== "cancer" && analize.score >= 0.5) {
-                        moveToResult(analize.label, analize.score, inferenceTime, currentImageUri)
-
-                    } else {
-                            showToast(getString(R.string.analize_not_found))
-                    }
+                    moveToResult(analize.label, analize.score, inferenceTime, currentImageUri)
 
                 } else {
                     showToast(getString(R.string.klasifikasi_not_found))

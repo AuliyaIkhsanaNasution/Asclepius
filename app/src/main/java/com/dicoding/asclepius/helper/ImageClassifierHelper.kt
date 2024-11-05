@@ -81,9 +81,9 @@ class ImageClassifierHelper(
                     .NEAREST_NEIGHBOR)).build()
 
             var inferenceTime = SystemClock.uptimeMillis()
-            inferenceTime = SystemClock.uptimeMillis() - inferenceTime
             val tensorImage = imageProcessor.process(TensorImage.fromBitmap(bitmapImg))
             val resultsImg = imageClassifier?.classify(tensorImage)
+            inferenceTime = SystemClock.uptimeMillis() - inferenceTime
             classifierListener?.onImageResults(resultsImg, inferenceTime)
 
 

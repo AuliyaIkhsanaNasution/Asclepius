@@ -10,6 +10,9 @@
     <string name="media_not_found">Pilih gambar terlebih dahulu</string>
     <string name="analize_not_found">Gambar tersebut tidak menunjukkan kanker atau bukan gambar medis yang valid</string>
     <string name="klasifikasi_not_found">Tidak dapat melakukan klasifikasi</string>
+    <string name="crop_failed">Gagal untuk Memotong Gambar</string>
+    <string name="image_not_found">Gambar tidak ditemukan</string>
+
 
 
 </resources>
