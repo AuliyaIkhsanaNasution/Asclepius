@@ -25,7 +25,7 @@ class ImageClassifierHelper(
     interface ClassifierListener {
         fun onImageError(error: String)
         fun onImageResults(
-            results: List<Classifications>?,
+            result: List<Classifications>?,
             inferenceTime: Long
         )
     }

@@ -79,10 +79,10 @@ class MainActivity : AppCompatActivity(), ImageClassifierHelper.ClassifierListen
         }
     }
 
-    private fun moveToResult(label: String, score: Float, inferenceTime: Long, imageUri: Uri?) {
+    private fun moveToResult(name: String, score: Float, inferenceTime: Long, imageUri: Uri?) {
         // TODO: Memindahkan ke ResultActivity.
         val intent = Intent(this, ResultActivity::class.java).apply {
-            putExtra("LABEL", label)
+            putExtra("NAME", name)
             putExtra("SCORE", score)
             putExtra("INFERENCE_TIME", inferenceTime)
             putExtra("IMAGE_URI", imageUri.toString())
@@ -97,31 +97,32 @@ class MainActivity : AppCompatActivity(), ImageClassifierHelper.ClassifierListen
 
     override fun onImageError(error: String) {
         runOnUiThread {
-
+        // binding untuk proses indikator loading
             mainBinding.progressIndicator.visibility = View.GONE
             showToast(error)
         }
     }
 
     @SuppressLint("SuspiciousIndentation")
-    override fun onImageResults(results: List<Classifications>?, inferenceTime: Long) {
+    override fun onImageResults(result: List<Classifications>?, inferenceTime: Long) {
         runOnUiThread {
             mainBinding.progressIndicator.visibility = View.GONE
 
-            results?.let { classifications ->
+            result?.let { classifications ->
                 if (classifications.isNotEmpty() && classifications[0].categories.isNotEmpty()) {
-                    val category = classifications[0].categories[0]
+                    val analize = classifications[0].categories[0]
 
-                        if (category.label.lowercase(Locale.getDefault())== "cancer" && category.score >= 0.5) {
-                        moveToResult(category.label, category.score, inferenceTime, currentImageUri)
+                        if (analize.label.lowercase(Locale.getDefault())== "cancer" && analize.score >= 0.5) {
+                        moveToResult(analize.label, analize.score, inferenceTime, currentImageUri)
 
                     } else {
                             showToast(getString(R.string.analize_not_found))
                     }
+
                 } else {
                     showToast(getString(R.string.klasifikasi_not_found))
                 }
-            } ?: showToast("No results")
+            } ?: showToast("Hasil tidak ditemukan")
         }
     }
 }
