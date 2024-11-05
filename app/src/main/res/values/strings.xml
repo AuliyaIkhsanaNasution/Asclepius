@@ -7,4 +7,5 @@
     <string name="result">Hasil Analisis</string>
     <string name="failed_image">Gagal Inisialisasi Gambar</string>
     <string name="failed_model">Gagal Memuat Model</string>
+    <string name="media_not_found">Pilih gambar terlebih dahulu</string>
 </resources>

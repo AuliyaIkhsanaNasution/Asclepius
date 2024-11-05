@@ -16,15 +16,15 @@ import java.io.IOException
 
 
 class ImageClassifierHelper(
-    private var threshold: Float = 0.1f,
-    private var maxResults: Int = 3,
-    private val modelName: String = "cancer_classification.tflite",
-    private val context: Context,
-    private val classifierListener: ClassifierListener?) {
+    var threshold: Float = 0.1f,
+    var maxResults: Int = 3,
+    val modelName: String = "cancer_classification.tflite",
+    val context: Context,
+    var classifierListener: ClassifierListener?) {
 
     interface ClassifierListener {
-        fun onError(error: String)
-        fun onResults(
+        fun onImageError(error: String)
+        fun onImageResults(
             results: List<Classifications>?,
             inferenceTime: Long
         )
@@ -59,7 +59,7 @@ class ImageClassifierHelper(
             )
 
         }catch (e: IllegalStateException) {
-            classifierListener?.onError(context.getString(R.string.failed_image))
+            classifierListener?.onImageError(context.getString(R.string.failed_image))
             Log.e(TAG, e.message.toString())
         }
 
@@ -74,8 +74,8 @@ class ImageClassifierHelper(
 
         try {
             @Suppress("DEPRECATION")
-//            lkonversi gambar statis ke bitmap
-            val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
+//            konversi gambar statis ke bitmap
+            val bitmapImg = MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
             val imageProcessor = ImageProcessor.Builder()
                 .add(ResizeOp(224, 224, ResizeOp
                     .ResizeMethod
@@ -83,13 +83,13 @@ class ImageClassifierHelper(
 
             var inferenceTime = SystemClock.uptimeMillis()
             inferenceTime = SystemClock.uptimeMillis() - inferenceTime
-            val tensorImage = imageProcessor.process(TensorImage.fromBitmap(bitmap))
-            val results = imageClassifier?.classify(tensorImage)
-            classifierListener?.onResults(results, inferenceTime)
+            val tensorImage = imageProcessor.process(TensorImage.fromBitmap(bitmapImg))
+            val resultsImg = imageClassifier?.classify(tensorImage)
+            classifierListener?.onImageResults(resultsImg, inferenceTime)
 
 
         } catch (e: IOException) {
-            classifierListener?.onError("gagal untuk memproses gambar sesuai code ${e.message}")
+            classifierListener?.onImageError("gagal untuk memproses gambar sesuai code ${e.message}")
             Log.e(TAG, "gagal untuk memproses gambar", e)
         }
 
