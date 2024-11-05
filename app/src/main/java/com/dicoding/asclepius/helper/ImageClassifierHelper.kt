@@ -71,7 +71,6 @@ class ImageClassifierHelper(
         if (imageClassifier == null) {
             setupImageClassifier()
         }
-
         try {
             @Suppress("DEPRECATION")
 //            konversi gambar statis ke bitmap
