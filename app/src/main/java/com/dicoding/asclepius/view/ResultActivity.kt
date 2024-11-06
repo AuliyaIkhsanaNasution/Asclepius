@@ -27,8 +27,9 @@ class ResultActivity : AppCompatActivity() {
     @SuppressLint("DefaultLocale")
     private fun displayResults(label: String, score: Float, inferenceTime: Long) {
         val resultText = """
-            Prediksi Menghasilkan: $label ${String.format("%.2f%%", score * 100)}
-            Dengan Inference Time: $inferenceTime ms
+            Prediksi Menghasilkan $label
+            Dengan Inference Time $inferenceTime ms
+            Score Prediksi ${String.format("%.2f%%", score * 100)}
         """.trimIndent()
 
         resultBinding.resultText.text = resultText

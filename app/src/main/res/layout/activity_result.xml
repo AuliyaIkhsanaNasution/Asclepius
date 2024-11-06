@@ -26,6 +26,7 @@
             android:id="@+id/result_image"
             android:layout_width="match_parent"
             android:layout_height="400dp"
+            android:layout_margin="8dp"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_place_holder"/>
 
@@ -33,7 +34,7 @@
             android:id="@+id/result_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_margin="8dp"
             android:textStyle="bold"
             android:textSize="15sp"
             android:text="@string/result" />
