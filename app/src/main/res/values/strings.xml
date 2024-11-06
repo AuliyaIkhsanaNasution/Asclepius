@@ -2,8 +2,8 @@
     <string name="app_name">Asclepius</string>
     <string name="camera_x">CameraX</string>
     <string name="camera">Kamera</string>
-    <string name="gallery">Galeri</string>
-    <string name="analyze">Analyze</string>
+    <string name="gallery">Pilih Gambar</string>
+    <string name="analyze">Analisis Sekarang</string>
     <string name="result">Hasil Analisis</string>
     <string name="failed_image">Gagal Inisialisasi Gambar</string>
     <string name="failed_model">Gagal Memuat Model</string>
@@ -12,7 +12,8 @@
     <string name="klasifikasi_not_found">Tidak dapat melakukan klasifikasi</string>
     <string name="crop_failed">Gagal untuk Memotong Gambar</string>
     <string name="image_not_found">Gambar tidak ditemukan</string>
-
+    <string name="selamat_datang">Selamat Datang\nSilahkan Pilih Gambar Terlebih dahulu</string>
+    <string name="hasil_analize">Hasil Analize</string>
 
 
 </resources>

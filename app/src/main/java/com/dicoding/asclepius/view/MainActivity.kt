@@ -125,6 +125,8 @@ class MainActivity : AppCompatActivity(), ImageClassifierHelper.ClassifierListen
             putExtra("IMAGE_URI", imageUri.toString())
         }
         startActivity(intent)
+        @Suppress("DEPRECATION")
+        overridePendingTransition(R.anim.enter_animation, R.anim.exit_animation)
     }
 
     private fun showToast(message: String) {

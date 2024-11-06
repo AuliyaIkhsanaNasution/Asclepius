@@ -4,4 +4,13 @@
     <color name="cyan_600">#0891b2</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="sky_100">#f1f5f9</color>
+    <color name="sky_200">#bae6fd</color>
+    <color name="sky_300">#7dd3fc</color>
+    <color name="sky_400">#38bdf8</color>
+    <color name="sky_500">#0ea5e9</color>
+    <color name="sky_600">#0284c7</color>
+    <color name="sky_700">#0369a1</color>
+    <color name="sky_800">#075985</color>
+
 </resources>
