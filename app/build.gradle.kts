@@ -56,5 +56,6 @@ dependencies {
     implementation("org.tensorflow:tensorflow-lite-task-vision:0.4.4")
 
     implementation ("com.github.yalantis:ucrop:2.2.8")
-
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
+    implementation("androidx.activity:activity-ktx:1.9.3")
 }

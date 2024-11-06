@@ -13,7 +13,8 @@
     <string name="crop_failed">Gagal untuk Memotong Gambar</string>
     <string name="image_not_found">Gambar tidak ditemukan</string>
     <string name="selamat_datang">Selamat Datang\nSilahkan Pilih Gambar Terlebih dahulu</string>
-    <string name="hasil_analize">Hasil Analize</string>
+    <string name="hasil_analize">Hasil Analisis Gambar</string>
+    <string name="crop_canceled">cancel memotong gambar</string>
 
 
 </resources>
