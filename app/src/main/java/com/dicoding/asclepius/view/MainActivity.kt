@@ -15,9 +15,9 @@ import com.dicoding.asclepius.helper.ImageClassifierHelper
 import com.yalantis.ucrop.UCrop
 import org.tensorflow.lite.task.vision.classifier.Classifications
 import java.io.File
-import java.util.Locale
 
 class MainActivity : AppCompatActivity(), ImageClassifierHelper.ClassifierListener  {
+//    deklarasi variabel dan juga binding, kemudian class helper
     private lateinit var imageHelper: ImageClassifierHelper
     private var currentImageUri: Uri? = null
     private lateinit var mainBinding: ActivityMainBinding
@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity(), ImageClassifierHelper.ClassifierListen
         mainBinding.analyzeButton.setOnClickListener { analyzeImage() }
         mainBinding.galleryButton.setOnClickListener { startGallery() }
 
+
 //        ini adalah image classifier yang akan digunakan
         imageHelper = ImageClassifierHelper(
             threshold = 0.5f,
@@ -42,33 +43,38 @@ class MainActivity : AppCompatActivity(), ImageClassifierHelper.ClassifierListen
         )
     }
 
+//    mengambil gambar dari galeri
     private fun startGallery() {
         // TODO: Mendapatkan gambar dari Gallery.
+//        pakai photo pick
         launcherGallery.launch(
             PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
         )
     }
 
+//    munculkan gallery
     private val launcherGallery = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()) {
         uri: Uri? ->
         if (uri != null) {
             currentImageUri = uri
+//            panggil fungsi crop
             imageCropLaunch(uri)
         } else {
             showToast(getString(R.string.media_not_found))
         }
     }
 
+//    ini adalah fungsi untuk menangani crop gambar
     private fun imageCropLaunch(uri: Uri) {
         val destinationUri = Uri.fromFile(File(cacheDir, "croppedImage.jpg"))
-        val options = UCrop.Options().apply {
+        val options = UCrop.Options()
+            .apply {
             setCompressionQuality(100)
         }
-
+//    mengatur ratio dan juga maxresult
         UCrop.of(uri, destinationUri)
-            .withAspectRatio(1f, 1f)
-            .withMaxResultSize(1080, 1080)
+            .withAspectRatio(1f, 1f).withMaxResultSize(1080, 1080)
             .withOptions(options)
             .start(this)
     }
@@ -76,14 +82,17 @@ class MainActivity : AppCompatActivity(), ImageClassifierHelper.ClassifierListen
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+//        jika crop bisa maka jalankan
         if (resultCode == RESULT_OK) {
             if (requestCode == UCrop.REQUEST_CROP) {
                 val resultUri = UCrop.getOutput(data!!)
                 resultUri?.let {
                     currentImageUri = resultUri
+//                    jika berhasil di crop maka panggil fungsi show image
                     showImage()
                 }
             }
+//            menangani jika crop gagal
         } else if (resultCode == UCrop.RESULT_ERROR) {
             val cropError = UCrop.getError(data!!)
             cropError?.printStackTrace()
@@ -91,7 +100,7 @@ class MainActivity : AppCompatActivity(), ImageClassifierHelper.ClassifierListen
         }
     }
 
-
+//tampilkan gambar di fungsi ini
     private fun showImage() {
         currentImageUri?.let { uri ->
             // Membuat URI baru dengan menambahkan query parameter unik
@@ -102,23 +111,28 @@ class MainActivity : AppCompatActivity(), ImageClassifierHelper.ClassifierListen
         }
     }
 
-
+//    analisa gambar disini
     private fun analyzeImage() {
         // TODO: Menganalisa gambar yang berhasil ditampilkan.
 
         if (currentImageUri != null) {
             mainBinding.progressIndicator.visibility = View.VISIBLE
-
             imageHelper.classifyStaticImage(currentImageUri!!)
-
         } else {
             showToast(getString(R.string.media_not_found))
         }
     }
 
+    private fun showToast(message: String) {
+        // TODO: Menampilkan Toast
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+//    hasil yang didapat kemudian dipindahkan ke halaman result
     private fun moveToResult(name: String, score: Float, inferenceTime: Long, imageUri: Uri?) {
         // TODO: Memindahkan ke ResultActivity.
         val intent = Intent(this, ResultActivity::class.java).apply {
+//            ambil data kemudian kirimkan ke activity result
             putExtra("NAME", name)
             putExtra("SCORE", score)
             putExtra("INFERENCE_TIME", inferenceTime)
@@ -129,11 +143,7 @@ class MainActivity : AppCompatActivity(), ImageClassifierHelper.ClassifierListen
         overridePendingTransition(R.anim.enter_animation, R.anim.exit_animation)
     }
 
-    private fun showToast(message: String) {
-        // TODO: Menampilkan Toast
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
-
+//    jika gambar error maka tampilkan toast
     override fun onImageError(error: String) {
         runOnUiThread {
         // binding untuk proses indikator loading
@@ -142,11 +152,12 @@ class MainActivity : AppCompatActivity(), ImageClassifierHelper.ClassifierListen
         }
     }
 
+//    ini untuk hasil analisa dari gambar
     @SuppressLint("SuspiciousIndentation")
     override fun onImageResults(result: List<Classifications>?, inferenceTime: Long) {
         runOnUiThread {
             mainBinding.progressIndicator.visibility = View.GONE
-
+//di klasifikasikan apakah cancer atau tidak cancer
             result?.let { classifications ->
                 if (classifications.isNotEmpty() && classifications[0].categories.isNotEmpty()) {
                     val analize = classifications[0].categories[0]

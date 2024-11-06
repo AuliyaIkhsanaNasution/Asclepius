@@ -29,8 +29,9 @@ class ImageClassifierHelper(
             inferenceTime: Long
         )
     }
-
+//    Ini adalah property nullable yang mutable dengan akses terbatas
     private var imageClassifier: ImageClassifier? = null
+
 
     companion object {
         private const val TAG = "ImageClassifierHelper"
